@@ -9,6 +9,8 @@ export type Product = {
     product: string
 }
 
+export type FilterType = keyof Omit<Product,'id'>
+
 export type IdsResponse = {
     result:ProductId[]
 }

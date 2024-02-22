@@ -1,5 +1,5 @@
 import { api } from '../../api';
-import { ProductId,Product, ItemsResponse, IdsResponse } from '../../types/products';
+import { ProductId,Product, ItemsResponse, IdsResponse, FilterType } from '../../types/products';
 
 
 
@@ -37,9 +37,25 @@ class ProductsService {
     const ids = await this.getIds(offset,limit);
 
     const {result:products} = await this.getItems(ids);
-    console.log(products.filter((val,ind) => products.findIndex(v => v.id === val.id) === ind))
+
     return products.filter((val,ind) => products.findIndex(v => v.id === val.id) === ind)
   }
+
+  async getFilteredProducts(filter:FilterType,filterValue: number | string){
+    const {data:{result:ids}} = await api.post<IdsResponse>('/',{
+        action:'filter',
+        params:{
+            [filter]:filterValue
+        }
+    })
+
+    
+    const {result:products} = await this.getItems(ids);
+
+    return products.filter((val,ind) => products.findIndex(v => v.id === val.id) === ind)
+  }
+
+
 }
 
 export default new ProductsService()
